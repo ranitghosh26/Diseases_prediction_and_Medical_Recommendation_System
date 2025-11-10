@@ -1,16 +1,10 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block content %}
+
     <div class="container my-4 mt-4">
 
-<h4>      Contact Us
-</h4>
+<h4>      Contact Us</h4>
 <p>Have questions or want to know more about our project? We’d love to hear from you!</p>
 
 <h4>Project Support</h4>
@@ -42,11 +36,5 @@ Department of Computer Science and Engineering (CSE / DS)<br>
 <p style="font-style:italic; color:gray;">
 This project is developed by CSE students as part of our academic learning — not for medical or commercial use.
 </p>
-
-
-
-
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}
