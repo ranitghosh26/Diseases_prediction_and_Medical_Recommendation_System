@@ -49,7 +49,7 @@
   </head>
 
   <body>
-    <!-- ✅ Navbar -->
+    <!--  Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
         <div class="logo">
@@ -70,7 +70,7 @@
             <li class="nav-item"><a class="nav-link {% if request.path=='/blog' %}active{% endif %}" href="{{ url_for('blog') }}">Blog</a></li>
           </ul>
 
-          <span class="motivational-quote">“Your Personal Health Assistant”</span>
+          <span class="motivational-quote">“Your health, our priority”</span>
 
           <div class="toggle-switch text-white">
             <label for="themeSwitch" class="form-check-label">🌞 / 🌙</label>
@@ -80,12 +80,12 @@
       </div>
     </nav>
 
-    <!-- ✅ Page-specific content goes here -->
+    <!--  Page-specific content goes here -->
     {% block content %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- ✅ Theme Toggle Script -->
+    <!-- Theme Toggle Script -->
     <script>
       const themeSwitch = document.getElementById('themeSwitch');
       const htmlElement = document.documentElement;
@@ -113,7 +113,3 @@
 
 
 <!--  <div class="report-container" style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">-->
-
-
-
-

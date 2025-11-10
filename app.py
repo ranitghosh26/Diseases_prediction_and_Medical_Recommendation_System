@@ -15,7 +15,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib.utils import simpleSplit
 import io
 import os
-from flask import send_file, session, current_app
+from flask import current_app
 
 # Flask setup
 app = Flask(__name__)
@@ -312,8 +312,6 @@ def download_pdf():
     p.drawString(200, y, "Health Prediction Report")
     y -= 40
 
-    from reportlab.pdfbase.pdfmetrics import stringWidth
-    from reportlab.lib.utils import simpleSplit
 
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, "Disease:")
@@ -360,7 +358,7 @@ def download_pdf():
     write_list("Workouts:", report['workout'])
     write_list("Diets:", report['my_diet'])
 
-    # ✅ Use absolute path for static image
+    # Use absolute path for static image
     warning_icon_path = os.path.join(current_app.root_path, 'static', 'warning_icon.png')
     if os.path.exists(warning_icon_path):
         p.setFillColorRGB(1, 0, 0)
