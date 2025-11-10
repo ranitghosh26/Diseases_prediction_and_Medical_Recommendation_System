@@ -4,7 +4,7 @@
 # With Fuzzy Matching + PDF Report
 # ==============================
 
-from flask import Flask, request, render_template, send_file, session
+from flask import Flask, request, render_template, send_file, session,current_app
 import numpy as np
 import pandas as pd
 import pickle
@@ -15,11 +15,11 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib.utils import simpleSplit
 import io
 import os
-from flask import current_app
 
 # Flask setup
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
+application=app
 
 # Load datasets
 sym_des = pd.read_csv("datasets/symtoms_df.csv")
