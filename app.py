@@ -18,7 +18,7 @@ import io
 # Flask setup
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
-app = applicatiion
+application = app
 
 # Load datasets
 sym_des = pd.read_csv("datasets/symtoms_df.csv")
@@ -288,6 +288,7 @@ def download_pdf():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
