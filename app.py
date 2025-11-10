@@ -14,11 +14,12 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib.utils import simpleSplit
 import io
+import os
+from flask import send_file, session, current_app
 
 # Flask setup
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
-application = app
 
 # Load datasets
 sym_des = pd.read_csv("datasets/symtoms_df.csv")
@@ -189,9 +190,107 @@ def developer():
 
 
 
+# @app.route('/download_pdf')
+# def download_pdf():
+#     """Generate and download the health report as a PDF"""
+#     report = session.get('report')
+#     if not report:
+#         return "No report available. Please predict first."
+#
+#     buffer = io.BytesIO()
+#     p = canvas.Canvas(buffer, pagesize=letter)
+#     p.setTitle("Health Report")
+#
+#     width, height = letter
+#
+#     def set_page_background():
+#         """Ensure white background and black text for each new page"""
+#         p.setFillColorRGB(211, 211, 211)  # Slightly gray background
+#         p.rect(0, 0, width, height, fill=1, stroke=0)
+#         p.setFillColorRGB(0, 0, 0)
+#
+#         # Draw the first page background
+#     set_page_background()
+#
+#     y = 750
+#     p.setFont("Helvetica-Bold", 16)
+#     p.drawString(200, y, "Health Prediction Report")
+#     y -= 40
+#
+#
+#
+#     # Draw Disease label (bold)
+#     p.setFont("Helvetica-Bold", 12)
+#     p.drawString(50, y, "Disease:")
+#     text_width = stringWidth("Disease:", "Helvetica-Bold", 12)
+#
+#     # Draw Disease value (normal)
+#     p.setFont("Helvetica", 12)
+#     p.drawString(50 + text_width + 5, y, report['predicted_disease'])
+#     y -= 20
+#
+#     # Prepare Description text
+#     description_text = f"{report['dis_des']}"
+#     label = "Description:"
+#     label_width = stringWidth(label, "Helvetica-Bold", 12)
+#
+#     # Draw Description label (bold)
+#     p.setFont("Helvetica-Bold", 12)
+#     p.drawString(50, y, label)
+#
+#     # Draw Description content (normal, wrapped text)
+#     p.setFont("Helvetica", 12)
+#     lines = simpleSplit(description_text, "Helvetica", 12, width - 100)
+#
+#     # Print each line after the label
+#     first_line_offset = label_width + 5
+#     if lines:
+#         p.drawString(50 + first_line_offset, y, lines[0])
+#         y -= 15
+#         for line in lines[1:]:
+#             p.drawString(50, y, line)
+#             y -= 15
+#     y -= 10
+#
+#
+#     def write_list(title, items):
+#         nonlocal y
+#         p.setFont("Helvetica-Bold", 12)
+#         p.drawString(50, y, title)
+#         y -= 20
+#         p.setFont("Helvetica", 11)
+#         for item in items:
+#             if y < 100:  # if page is almost full
+#                 p.showPage()
+#                 set_page_background()
+#                 y = 750
+#                 p.setFont("Helvetica", 11)
+#             p.drawString(70, y, f"- {item}")
+#             y -= 15
+#         y -= 10
+#     # write_list("Disease:",report['predicted_disease'])
+#     # write_list("Description:",report['dis_des'])
+#     write_list("Precautions:", report['my_precautions'])
+#     write_list("Medications:", report['medications'])
+#     write_list("Workouts:", report['workout'])
+#     write_list("Diets:", report['my_diet'])
+#
+#     p.setFont("Helvetica-Bold", 10)
+#     p.setFillColorRGB(1, 0, 0)
+#     p.drawImage('static/warning_icon.png', 50, y - 3, width=12, height=12)
+#     p.drawString(50, y, "      Do not use any medicine without doctor's consultation.")
+#
+#     p.save()
+#     buffer.seek(0)
+#
+#     return send_file(buffer, as_attachment=True, download_name="Health_Report.pdf", mimetype='application/pdf')
+
+
+
+
+
 @app.route('/download_pdf')
 def download_pdf():
-    """Generate and download the health report as a PDF"""
     report = session.get('report')
     if not report:
         return "No report available. Please predict first."
@@ -203,12 +302,9 @@ def download_pdf():
     width, height = letter
 
     def set_page_background():
-        """Ensure white background and black text for each new page"""
-        p.setFillColorRGB(211, 211, 211)  # Slightly gray background
+        p.setFillColorRGB(211/255, 211/255, 211/255)
         p.rect(0, 0, width, height, fill=1, stroke=0)
         p.setFillColorRGB(0, 0, 0)
-
-        # Draw the first page background
     set_page_background()
 
     y = 750
@@ -216,32 +312,24 @@ def download_pdf():
     p.drawString(200, y, "Health Prediction Report")
     y -= 40
 
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    from reportlab.lib.utils import simpleSplit
 
-
-    # Draw Disease label (bold)
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, "Disease:")
     text_width = stringWidth("Disease:", "Helvetica-Bold", 12)
-
-    # Draw Disease value (normal)
     p.setFont("Helvetica", 12)
     p.drawString(50 + text_width + 5, y, report['predicted_disease'])
     y -= 20
 
-    # Prepare Description text
-    description_text = f"{report['dis_des']}"
     label = "Description:"
     label_width = stringWidth(label, "Helvetica-Bold", 12)
-
-    # Draw Description label (bold)
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, label)
 
-    # Draw Description content (normal, wrapped text)
+    description_text = report['dis_des']
     p.setFont("Helvetica", 12)
     lines = simpleSplit(description_text, "Helvetica", 12, width - 100)
-
-    # Print each line after the label
     first_line_offset = label_width + 5
     if lines:
         p.drawString(50 + first_line_offset, y, lines[0])
@@ -251,7 +339,6 @@ def download_pdf():
             y -= 15
     y -= 10
 
-
     def write_list(title, items):
         nonlocal y
         p.setFont("Helvetica-Bold", 12)
@@ -259,7 +346,7 @@ def download_pdf():
         y -= 20
         p.setFont("Helvetica", 11)
         for item in items:
-            if y < 100:  # if page is almost full
+            if y < 100:
                 p.showPage()
                 set_page_background()
                 y = 750
@@ -267,29 +354,31 @@ def download_pdf():
             p.drawString(70, y, f"- {item}")
             y -= 15
         y -= 10
-    # write_list("Disease:",report['predicted_disease'])
-    # write_list("Description:",report['dis_des'])
+
     write_list("Precautions:", report['my_precautions'])
     write_list("Medications:", report['medications'])
     write_list("Workouts:", report['workout'])
     write_list("Diets:", report['my_diet'])
 
+    # ✅ Use absolute path for static image
+    warning_icon_path = os.path.join(current_app.root_path, 'static', 'warning_icon.png')
+    if os.path.exists(warning_icon_path):
+        p.setFillColorRGB(1, 0, 0)
+        p.drawImage(warning_icon_path, 50, y - 3, width=12, height=12)
+    else:
+        print("⚠️ warning_icon.png not found in production")
+
     p.setFont("Helvetica-Bold", 10)
     p.setFillColorRGB(1, 0, 0)
-    p.drawImage('static/warning_icon.png', 50, y - 3, width=12, height=12)
-    p.drawString(50, y, "      Do not use any medicine without doctor's consultation.")
+    p.drawString(70, y, "Do not use any medicine without doctor's consultation.")
 
     p.save()
     buffer.seek(0)
-
     return send_file(buffer, as_attachment=True, download_name="Health_Report.pdf", mimetype='application/pdf')
-
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
 
 
